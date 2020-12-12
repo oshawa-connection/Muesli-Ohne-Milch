@@ -1,5 +1,6 @@
 import SysTray, { Menu, MenuItem, UpdateItemAction, UpdateMenuAction } from "systray";
 import * as fs from "fs";
+import { logMessages } from ".";
 let path = require('path');
 
 
@@ -66,7 +67,7 @@ export class TrayManager {
                     };
                     
                     tray.sendAction(x)
-                    console.log("Updating paused state")
+                    if (logMessages) console.log("Updating paused state")
                     break;
                 case 1:
                     tray.kill();

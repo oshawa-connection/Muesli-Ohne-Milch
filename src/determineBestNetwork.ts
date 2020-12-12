@@ -1,3 +1,5 @@
+import { logMessages } from ".";
+
 var wifi = require('node-wifi');
 
 async function getAllNetworks() : Promise<Array<foundNetwork>> {
@@ -14,7 +16,7 @@ async function getAllNetworks() : Promise<Array<foundNetwork>> {
 
 export async function determineBestNetwork(listOfKnownNetworks:Array<knownNetwork>) {
     let foundNetworks = await getAllNetworks();
-    console.log(`${foundNetworks.length} networks found`)
+    if (logMessages) console.log(`${foundNetworks.length} networks found`)
     let knownNetworkSSIDs = listOfKnownNetworks.map(network => network.ssid);
     
     let listOfFoundandKnownNetworks : Array<foundNetwork> = [];

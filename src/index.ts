@@ -9,6 +9,13 @@ wifi.init({
     iface: null // network interface, choose a random wifi interface if set to null
 });
 
+export let logMessages = false;
+
+
+if (process.env.NODE_ENV == 'development') {
+    console.log("running in dev mode");
+    logMessages = true
+}
 
 let trayManager = new TrayManager();
 
@@ -38,7 +45,7 @@ async function main() {
     let currentNetwork : foundNetwork = currentNetworks[0];
     
     if (currentNetwork.ssid !== bestNetwork.ssid) {
-        console.log(`You are connected to ${currentNetwork.ssid} but the best connection is ${bestNetwork.ssid}`)
+        if (logMessages) console.log(`You are connected to ${currentNetwork.ssid} but the best connection is ${bestNetwork.ssid}`)
         let password = listOfKnownNetworks.find(network => network.ssid == bestNetwork.ssid)?.password;
         
         if (!password) {
@@ -48,21 +55,21 @@ async function main() {
         await wifi.connect({ssid:bestNetwork.ssid,password:password});
 
     } else {
-        console.log(`You are currently connected to the best wifi: ${currentNetwork.ssid}`)
+        if (logMessages) console.log(`You are currently connected to the best wifi: ${currentNetwork.ssid}`)
     }
 } 
 
 let mainTask = schedule.scheduleJob('* * * * *', async () => {
     try {
-        console.log('Running it');
+        if (logMessages) console.log('Running it');
         if (trayManager.paused) {
-            console.log("Not running beacuse paused");
+            if (logMessages) console.log("Not running beacuse paused");
         } else {
             await main()
         }
         
     } catch (err) {
-        console.error(err.message);
+        if (logMessages) console.error(err.message);
     }
 });
 
